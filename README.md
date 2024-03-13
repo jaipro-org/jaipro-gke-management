@@ -1,1 +1,1 @@
-# GKE Configurations for cluster administration
+# GKE Configurations for cluster administration.
