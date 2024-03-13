@@ -1,0 +1,10 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  namespace: jaipro
+  name: managed-cert
+spec:
+  domains:
+    - bindord.online
+    - www.bindord.online
+    - api.bindord.online

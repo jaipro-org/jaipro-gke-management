@@ -1,0 +1,43 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: jaipro
+  name: managed-cert-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: jaipro-k8s-ingress-external
+    networking.gke.io/managed-certificates: managed-cert
+    ingressClassName: "gce"
+spec:
+  defaultBackend:
+    service:
+      name: jaipro-front
+      port:
+        number: 80
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: jaipro-keycloak
+                port:
+                  number: 8080
+            path: /eureka/keycloak-auth/v1
+            pathType: Prefix
+          - backend:
+              service:
+                name: jaipro-gateway
+                port:
+                  number: 8080
+            path: /eureka/gateway/v1
+            pathType: Prefix
+      host: bindord.online
+    - http:
+        paths:
+          - backend:
+              service:
+                name: jaipro-resource-server
+                port:
+                  number: 8080
+            path: /eureka/resource-server/v1
+            pathType: Prefix
+      host: api.bindord.online
