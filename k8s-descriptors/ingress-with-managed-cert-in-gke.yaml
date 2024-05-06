@@ -6,6 +6,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.global-static-ip-name: jaipro-k8s-ingress-external
     networking.gke.io/managed-certificates: managed-cert
+    networking.gke.io/v1beta1.FrontendConfig: "my-frontend-config"
     ingressClassName: "gce"
 spec:
   defaultBackend:
@@ -18,11 +19,14 @@ spec:
         paths:
           - backend:
               service:
-                name: jaipro-keycloak
+                name: jaipro-front
                 port:
-                  number: 8080
-            path: /eureka/keycloak-auth/v1
+                  number: 80
+            path: /
             pathType: Prefix
+      host: jaipro.pro
+    - http:
+        paths:
           - backend:
               service:
                 name: jaipro-gateway
@@ -30,9 +34,13 @@ spec:
                   number: 8080
             path: /eureka/gateway/v1
             pathType: Prefix
-      host: bindord.online
-    - http:
-        paths:
+          - backend:
+              service:
+                name: jaipro-gateway
+                port:
+                  number: 8080
+            path: /v3
+            pathType: Prefix
           - backend:
               service:
                 name: jaipro-resource-server
@@ -40,4 +48,11 @@ spec:
                   number: 8080
             path: /eureka/resource-server/v1
             pathType: Prefix
-      host: api.bindord.online
+          - backend:
+              service:
+                name: jaipro-keycloak
+                port:
+                  number: 8080
+            path: /eureka/keycloak-auth/v1
+            pathType: Prefix
+      host: api.jaipro.pro
